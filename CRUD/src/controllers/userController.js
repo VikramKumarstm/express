@@ -80,3 +80,38 @@ export const deleteUser = async (req, res) => {
         })
     }
 }
+
+export const editUser = async (req, res) => {
+    try {
+
+        const userId = req.params.id;
+        const updateData = req.body;
+        const user = await User.findByIdAndUpdate(
+            userId, 
+            updateData,
+            { new: true, runValidators: true } //return updated user
+        );
+
+        if(!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'User updated successfully',
+            user
+        })
+        
+    } catch (error) {
+
+        console.error("ERROR :", error);
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+        
+    }
+}
